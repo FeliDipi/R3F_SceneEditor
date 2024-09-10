@@ -1,4 +1,4 @@
-import { OrbitControls, PerspectiveCamera, Sphere } from "@react-three/drei";
+import { PerspectiveCamera, Sphere } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { MeshLambertMaterial } from "three";
 import { SceneEditor } from "./SceneEditor/SceneEditor";
@@ -11,7 +11,6 @@ const App = () => {
         <Canvas className="canvas">
           <SceneWrapper>
             <PerspectiveCamera position={[0, 0, 10]} fov={30} makeDefault />
-            <OrbitControls />
             <ambientLight intensity={1} />
             <pointLight position={[3, 3, 0]} intensity={10} />
             <Sphere
