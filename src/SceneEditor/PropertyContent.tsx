@@ -11,25 +11,31 @@ const PropertyContent = ({ info }: PropertyContentProps) => {
 
   return (
     <div className={style.propertyUI}>
-      <p>Name: {info.name}</p>
-      <p>
-        Position:{" "}
-        {`(${info.position.x.toFixed(1)} , ${info.position.y.toFixed(
-          1
-        )} , ${info.position.z.toFixed(1)})`}
-      </p>
-      <p>
-        Rotation:{" "}
-        {`(${info.rotation.x.toFixed(1)}° , ${info.rotation.y.toFixed(
-          1
-        )}° , ${info.rotation.z.toFixed(1)}°)`}
-      </p>
-      <p>
-        Scale:{" "}
-        {`(${info.scale.x.toFixed(1)} , ${info.scale.y.toFixed(
-          1
-        )} , ${info.scale.z.toFixed(1)})`}
-      </p>
+      <p className={style.propertyName}>{info.name}</p>
+      <div className={style.propertySpace}>
+        <p>Position</p>
+        <p>
+          (<span>{info.position.x.toFixed(1)}</span> ,
+          <span>{info.position.y.toFixed(1)}</span> ,
+          <span>{info.position.z.toFixed(1)}</span> )
+        </p>
+      </div>
+      <div className={style.propertySpace}>
+        <p>Rotation</p>
+        <p>
+          (<span>{info.rotation.x.toFixed(1)}</span> ,
+          <span>{info.rotation.y.toFixed(1)}</span> ,
+          <span>{info.rotation.z.toFixed(1)}</span> )
+        </p>
+      </div>
+      <div className={style.propertySpace}>
+        <p>Scale</p>
+        <p>
+          (<span>{info.scale.x.toFixed(1)}</span> ,
+          <span>{info.scale.y.toFixed(1)}</span> ,
+          <span>{info.scale.z.toFixed(1)}</span> )
+        </p>
+      </div>
     </div>
   );
 };

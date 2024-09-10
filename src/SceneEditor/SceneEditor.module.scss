@@ -76,6 +76,30 @@
       p {
         color: #dcdde1;
       }
+
+      .propertyName {
+        font-size: 15px;
+        font-weight: 700;
+
+        margin-bottom: 5px;
+      }
+
+      .propertySpace {
+        display: flex;
+        justify-content: space-between;
+
+        p:nth-child(2) {
+          span:nth-child(1) {
+            color: #e74c3c;
+          }
+          span:nth-child(2) {
+            color: #2ecc71;
+          }
+          span:nth-child(3) {
+            color: #3498db;
+          }
+        }
+      }
     }
   }
 
