@@ -20,6 +20,11 @@ export interface ObjectsDataProps {
   scale: Vector3;
 }
 
+interface BreakpointDataProps {
+  breakpoint: [number, number];
+  props: ObjectsDataProps[];
+}
+
 interface SceneEditorProps {
   handleSceneObjects: (objects: any[]) => void;
   isHelpersActive: boolean;
@@ -27,6 +32,9 @@ interface SceneEditorProps {
 
 export const SceneEditor = ({ children }: any) => {
   const [objects, setSceneObjects] = useState<any[]>([]);
+  const [breakpointSnapshot, setBreakpointSnapshot] = useState<
+    BreakpointDataProps[]
+  >([]);
   const [isHelpersActive, setHelpersActive] = useState<boolean>(true);
 
   const handleSceneObjects = (objects: any[]) => {
@@ -34,6 +42,38 @@ export const SceneEditor = ({ children }: any) => {
       (obj) => !obj.type.includes("Helper")
     );
     setSceneObjects(newObjects);
+  };
+
+  const handleBreakpointCapture = (breakpoint: [number, number]) => {
+    const breakpointData: BreakpointDataProps = {
+      breakpoint: breakpoint,
+      props: [],
+    };
+
+    objects.forEach((obj) => {
+      breakpointData.props.push(getProps(obj));
+    });
+
+    const newBreakpointSnapshot = [...breakpointSnapshot];
+    newBreakpointSnapshot.push(breakpointData);
+
+    setBreakpointSnapshot(newBreakpointSnapshot);
+  };
+
+  const handleBreakpointSave = () => {
+    const jsonData = JSON.stringify(breakpointSnapshot, null, 2);
+
+    const blob = new Blob([jsonData], { type: "application/json" });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "breakpoint_snapshot.json";
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
   };
 
   const handleSwitchHelpers = () => {
@@ -73,7 +113,10 @@ export const SceneEditor = ({ children }: any) => {
           </div>
         </Draggable>
         <HelpersButton handlerSwitch={handleSwitchHelpers} />
-        <SnapshotController />
+        <SnapshotController
+          handleCapture={handleBreakpointCapture}
+          handleSave={handleBreakpointSave}
+        />
       </div>
     </SceneEditorContext.Provider>
   );
