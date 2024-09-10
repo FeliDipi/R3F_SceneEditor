@@ -1,49 +1,66 @@
-import { Scene } from "three";
+import { Vector3 } from "three";
 import Draggable from "./Draggable";
 import style from "./SceneEditor.module.scss";
 
 import { createContext, useContext, useState } from "react";
+import PropertyContent from "./PropertyContent";
+import { radToDeg } from "three/src/math/MathUtils.js";
 
-const SceneEditorContext = createContext(null);
+const SceneEditorContext = createContext<SceneEditorProps | undefined>(
+  undefined
+);
 
-export const SceneEditor = ({ children }) => {
-  const [scene, setScene] = useState<Scene>();
-  const [info, setInfo] = useState<InfoProps>();
+export interface ObjectsDataProps {
+  id: string;
+  name: string;
+  position: Vector3;
+  rotation: Vector3;
+  scale: Vector3;
+}
 
-  const updateInfo = (newInfo) => {
-    setInfo(newInfo);
+interface SceneEditorProps {
+  handleSceneObjects: (objects: any[]) => void;
+}
+
+export const SceneEditor = ({ children }: any) => {
+  const [objects, setSceneObjects] = useState<any[]>([]);
+
+  const handleSceneObjects = (objects: any[]) => {
+    const newObjects: any[] = [...objects];
+    setSceneObjects(newObjects);
+  };
+
+  const getProps = (object: any) => {
+    console.log(object);
+
+    const objProps: ObjectsDataProps = {
+      id: object.uuid,
+      name: object.type,
+      position: object.position.clone(),
+      rotation: new Vector3(
+        radToDeg(object.rotation.x),
+        radToDeg(object.rotation.y),
+        radToDeg(object.rotation.z)
+      ),
+      scale: object.scale.clone(),
+    };
+
+    return objProps;
   };
 
   return (
     <SceneEditorContext.Provider
       value={{
-        setScene,
-        updateInfo,
+        handleSceneObjects,
       }}
     >
       {children}
       <div className={style.editorUI}>
         <Draggable>
           <div className={style.contentUI}>
-            <p>Name: {info?.name}</p>
-            <p>
-              Position:{" "}
-              {`(${info?.position.x.toFixed(1)} , ${info?.position.y.toFixed(
-                1
-              )} , ${info?.position.z.toFixed(1)})`}
-            </p>
-            <p>
-              Rotation:{" "}
-              {`(°${info?.rotation.x.toFixed(1)} , °${info?.rotation.y.toFixed(
-                1
-              )} , °${info?.rotation.z.toFixed(1)})`}
-            </p>
-            <p>
-              Scale:{" "}
-              {`(${info?.scale.x.toFixed(1)} , ${info?.scale.y.toFixed(
-                1
-              )} , ${info?.scale.z.toFixed(1)})`}
-            </p>
+            {objects.map((obj, idx) => (
+              <PropertyContent key={idx} info={getProps(obj)} />
+            ))}
           </div>
         </Draggable>
       </div>
